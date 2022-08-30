@@ -1,16 +1,8 @@
-//api key and URLs
-const API_KEY = "7d149566af8dd84bd3a1e75d071091be";
-const IMAGE_URL = "https://image.tmdb.org/t/p/w500";
-
-function generateURL(path) {
-	const URL = `https://api.themoviedb.org/3${path}?api_key=7d149566af8dd84bd3a1e75d071091be`;
-	return URL;
-}
-
 //DOM elements
 const submitElement = document.getElementById("searchTab");
-const input = document.getElementById("inputValue");
+const inputElement = document.getElementById("inputValue");
 const movieSearch = document.getElementById("movie-search");
+const movieContainer = document.getElementById("movie-container");
 
 function movieSection(movies) {
 	return movies.map((movie) => {
@@ -22,11 +14,12 @@ function movieSection(movies) {
 }
 
 //create DOM elements
-function createContainer(movies) {
+function createContainer(movies, title = "") {
 	const movieElement = document.createElement("div"); //div to nest elements
 	movieElement.setAttribute("class", "movie");
 
 	const movieTemplate = `
+        <h2>${title}</h2>
         <section class="section">
             ${movieSection(movies)}
         </section>
@@ -38,6 +31,7 @@ function createContainer(movies) {
 	movieElement.innerHTML = movieTemplate;
 	return movieElement;
 }
+
 function renderSearchMovies(data) {
 	movieSearch.innerHTML = ""; //new search clears old search
 	const movies = data.results;
@@ -46,18 +40,22 @@ function renderSearchMovies(data) {
 	console.log(data);
 }
 
+function renderMovies(data) {
+	const movies = data.results;
+	const movieBlock = createContainer(movies, this.title);
+	movieContainer.appendChild(movieBlock);
+}
+
+function handleError(error) {
+	console.log("Error: ", error);
+}
+
 submitElement.addEventListener("click", (e) => {
 	e.preventDefault();
-	const inputValue = input.value;
-	path = "/search/movie"; //path specification
-	const posterURL = generateURL(path) + "&query=" + inputValue;
+	const value = inputElement.value;
+	searchMovie(value);
 
-	fetch(posterURL) //display movieposters
-		.then((res) => res.json())
-		.then(renderSearchMovies)
-		.catch((error) => console.log("error:", error));
-
-	input.value = ""; // reset
+	inputElement.value = ""; // reset
 });
 
 function createIframe(video) {
@@ -68,6 +66,24 @@ function createIframe(video) {
 	iframe.allowFullscreen = true;
 
 	return iframe;
+}
+
+function createTrailerTemplate(data, content) {
+	//TODO
+	//dilay movie videos
+	content.innerHTML = `<p id = "content-close">X</p>`;
+	console.log("videos:", data);
+	const videos = data.results;
+	const length = videos.length > 4 ? 4 : videos.length;
+	const iframeContainer = document.createElement("div");
+
+	for (let i = 0; i < length; i++) {
+		//loop over videos max 4
+		const video = videos[i];
+		const iframe = createIframe(video);
+		iframeContainer.appendChild(iframe);
+		content.appendChild(iframeContainer);
+	}
 }
 
 //trailer section
@@ -86,20 +102,7 @@ document.addEventListener("click", (e) => {
 
 		fetch(trailerURL) //fetch movie trailer
 			.then((res) => res.json())
-			.then((data) => {
-				console.log("videos:", data);
-				const videos = data.results;
-				const length = videos.length > 4 ? 4 : videos.length;
-				const iframeContainer = document.createElement("div");
-
-				for (let i = 0; i < length; i++) {
-					//loop over videos max 4
-					const video = videos[i];
-					const iframe = createIframe(video);
-					iframeContainer.appendChild(iframe);
-					content.appendChild(iframeContainer);
-				}
-			})
+			.then((data) => createTrailerTemplate(data, content)) //
 			.catch((error) => console.log("error:", error));
 	}
 
@@ -108,4 +111,11 @@ document.addEventListener("click", (e) => {
 		const content = target.parentElement;
 		content.classList.remove("content-display");
 	}
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+	searchMovie("Thor");
+	getUpcomingMovies();
+	getTopRatedMovies();
+	getPopularMovies();
 });
