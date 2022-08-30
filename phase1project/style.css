@@ -1,0 +1,66 @@
+body {
+	background-color: bisque;
+	height: 100vh;
+}
+
+.form-group {
+	margin-bottom: 1rem;
+}
+
+#inputValue {
+	width: 760px;
+	padding: 0.375rem 0.75rem;
+	font-size: 1rem;
+	font-weight: 400;
+	line-height: 1.5;
+	outline: none;
+	color: #495057;
+	background-color: #fff;
+	border: 1px solid #ced4da;
+	border-radius: 0.25rem;
+}
+
+#search {
+	color: antiquewhite;
+	background-color: coral;
+	font-size: 1rem;
+	outline: none;
+	min-height: 38px;
+	font-weight: 400;
+	text-align: center;
+	cursor: pointer;
+	padding: 0.375rem 0.75;
+	line-height: 1.5;
+	border-radius: 0.25rem;
+}
+
+#movie-search {
+	margin-top: 20px;
+}
+
+section {
+	display: flex;
+	width: 100%;
+	overflow-x: auto;
+}
+
+section img {
+	width: 300px;
+	transition: 250ms all;
+}
+
+img:hover {
+	margin-left: 0 40px;
+	transform: scale(1.2);
+	cursor: pointer;
+}
+
+.content {
+	border: 1px red;
+	height: 300px;
+	display: none;
+}
+
+.content-display {
+	display: block;
+}
