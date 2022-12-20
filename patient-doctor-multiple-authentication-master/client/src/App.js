@@ -29,6 +29,7 @@ function App() {
 
   return (
     <div>
+        //logic for routing
       {storedToken ? (
         <Router>
           {role === "admin" && <AdminNavbar />}
