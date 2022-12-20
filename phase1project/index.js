@@ -5,12 +5,19 @@ const movieSearch = document.getElementById("movie-search");
 const movieContainer = document.getElementById("movie-container");
 
 function movieSection(movies) {
-	return movies.map((movie) => {
-		if (movie.poster_path)
-			return `<img src = ${IMAGE_URL + movie.poster_path} 
-            data-movie-id = ${movie.id}
-            />`;
+	const section = document.createElement("section");
+	section.classList = "section";
+
+	movies.map((movie) => {
+		if (movie.poster_path) {
+			const img = document.createElement("img");
+			img.src = IMAGE_URL + movie.poster_path;
+			img.setAttribute("data-movie-id", movie.id);
+
+			section.appendChild(img);
+		}
 	});
+	return section;
 }
 
 //create DOM elements
@@ -18,21 +25,25 @@ function createContainer(movies, title = "") {
 	const movieElement = document.createElement("div"); //div to nest elements
 	movieElement.setAttribute("class", "movie");
 
-	const movieTemplate = `
-        <h2>${title}</h2>
-        <section class="section">
-            ${movieSection(movies)}
-        </section>
-        <div class="content">
-            <p id="content-close">X</p>
-        </div>
-    `;
+	const header = document.createElement("h2");
+	header.innerText = title;
 
-	movieElement.innerHTML = movieTemplate;
+	const content = document.createElement("div");
+	content.classList = "content";
+
+	const contentClose = `<button id="content-close" aria-label="Close"></button>`;
+	content.innerHTML = contentClose;
+
+	const section = movieSection(movies);
+
+	movieElement.appendChild(header);
+	movieElement.appendChild(section);
+	movieElement.appendChild(content);
+
 	return movieElement;
 }
 
-function renderSearchMovies(data) {
+function renderSearch(data) {
 	movieSearch.innerHTML = ""; //new search clears old search
 	const movies = data.results;
 	const movieBlock = createContainer(movies); //assign variable for created elements
@@ -71,19 +82,19 @@ function createIframe(video) {
 function createTrailerTemplate(data, content) {
 	//TODO
 	//dilay movie videos
-	content.innerHTML = `<p id = "content-close">X</p>`;
+	content.innerHTML = `<button id="content-close" aria-label="Close"></button>`;
 	console.log("videos:", data);
 	const videos = data.results;
 	const length = videos.length > 4 ? 4 : videos.length;
 	const iframeContainer = document.createElement("div");
 
-	for (let i = 0; i < length; i++) {
-		//loop over videos max 4
-		const video = videos[i];
-		const iframe = createIframe(video);
-		iframeContainer.appendChild(iframe);
-		content.appendChild(iframeContainer);
-	}
+        for (let i = 0; i < length; i++) {
+            //loop over videos max 4
+            const video = videos[i];
+            const iframe = createIframe(video);
+            iframeContainer.appendChild(iframe);
+            content.appendChild(iframeContainer);
+        } 
 }
 
 //trailer section
@@ -115,6 +126,7 @@ document.addEventListener("click", (e) => {
 
 document.addEventListener("DOMContentLoaded", () => {
 	searchMovie("Thor");
+	// searchMovieGenre();
 	getUpcomingMovies();
 	getTopRatedMovies();
 	getPopularMovies();

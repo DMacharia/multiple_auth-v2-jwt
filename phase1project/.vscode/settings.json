@@ -1,4 +1,5 @@
 {
-  "editor.guides.bracketPairs": true,
-  "workbench.tree.indent": 16
+	"editor.guides.bracketPairs": true,
+	"workbench.tree.indent": 16,
+	"liveServer.settings.port": 5502
 }

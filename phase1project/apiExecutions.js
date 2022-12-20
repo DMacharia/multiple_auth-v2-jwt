@@ -18,16 +18,16 @@ function searchMovie(value) {
 	const path = "/search/movie"; //path specification
 	const url = generateURL(path) + "&query=" + value;
 
-	requestMovies(url, renderSearchMovies, handleError);
+	requestMovies(url, renderSearch, handleError);
 }
 
-function getUpcomingMovies() {
-	const path = "/movie/upcoming";
-	const url = generateURL(path);
-	const render = renderMovies.bind({ title: "Upcoming Movies" });
+    function getUpcomingMovies() {
+        const path = "/movie/upcoming";
+        const url = generateURL(path);
+        const render = renderMovies.bind({ title: "Upcoming Movies" });
 
-	requestMovies(url, render, handleError);
-}
+        requestMovies(url, render, handleError);
+    }
 
 function getTopRatedMovies() {
 	const path = "/movie/top_rated";
